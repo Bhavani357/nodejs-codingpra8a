@@ -1,5 +1,4 @@
-#9 right answers out of 14 in this first 4 questions are wrong in get method
-
+# 13 questions are right , put request database updated testCase only wrong
 
 const express = require("express");
 const path = require("path");
@@ -53,46 +52,46 @@ app.get("/todos/", async (request, response) => {
   switch (true) {
     case hasPriorityAndStatusProperties(request.query): //if this is true then below query is taken in the code
       getTodosQuery = `
-   SELECT
-    *
-   FROM
-    todo 
-   WHERE
-    todo LIKE '%${search_q}%'
-    AND status = '${status}'
-    AND priority = '${priority}';`;
+        SELECT
+            *
+        FROM
+            todo 
+        WHERE
+            todo LIKE '%${search_q}%'
+            AND status = '${status}'
+            AND priority = '${priority}';`;
       break;
     case hasPriorityProperty(request.query):
       getTodosQuery = `
-   SELECT
-    *
-   FROM
-    todo 
-   WHERE
-    todo LIKE '%${search_q}%'
-    AND priority = '${priority}';`;
+        SELECT
+            *
+        FROM
+            todo 
+        WHERE
+            todo LIKE '%${search_q}%'
+            AND priority = '${priority}';`;
       break;
     case hasStatusProperty(request.query):
       getTodosQuery = `
-   SELECT
-    *
-   FROM
-    todo 
-   WHERE
-    todo LIKE '%${search_q}%'
-    AND status = '${status}';`;
+        SELECT
+            *
+        FROM
+            todo 
+        WHERE
+            todo LIKE '%${search_q}%'
+            AND status = '${status}';`;
       break;
     default:
       getTodosQuery = `
-   SELECT
-    *
-   FROM
-    todo 
-   WHERE
-    todo LIKE '%${search_q}%';`;
+        SELECT
+            *
+        FROM
+            todo 
+        WHERE
+            todo LIKE '%${search_q}%';`;
   }
 
-  data = await database.all(getTodosQuery);
+  data = await db.all(getTodosQuery);
   response.send(data);
 });
 
@@ -139,10 +138,12 @@ app.put("/todos/:todoId/", async (request, response) => {
       break;
   }
   const previousTodoQuery = `
-    SELECT * FROM todo
-      
+    SELECT 
+      * 
+    FROM 
+      todo
     WHERE 
-      id = ${todoId};
+      id = '${todoId}';
       `;
   const result = await db.get(previousTodoQuery);
 
@@ -152,14 +153,16 @@ app.put("/todos/:todoId/", async (request, response) => {
     status_p = result.status,
   } = request.body;
   const updateTodoQuery = `
-  UPDATE todo
+  UPDATE 
+     todo
   SET 
     todo='${todo_p}',
     priority='${priority_p}',
     status = '${status_p}'
   WHERE 
-    id = ${todoId};`;
-  await db.run(updateTodoQuery);
+    id = '${todoId}';
+    `;
+  const outPut = await db.run(updateTodoQuery);
   response.send(`${updateColumn} Updated`);
 });
 
@@ -174,3 +177,5 @@ app.delete("/todos/:todoId/", async (request, response) => {
   const result = await db.run(deleteTodoPriority);
   response.send("Todo Deleted");
 });
+
+
